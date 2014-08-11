@@ -1,5 +1,8 @@
 package week1
 
+/**
+ * Scala worksheet to calculate sqaure roots using Newton's method
+ */
 object NewtonsSqrt
 {
   def abs(x:Double) = if(x<0) -x else x           //> abs: (x: Double)Double

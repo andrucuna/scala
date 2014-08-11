@@ -1,6 +1,10 @@
 package week2
 
-object Factorial {
+/**
+ * An improved version of factorial function, using tail recursion
+ */
+object Factorial
+{
 	def factorial( n:Int ):Int =
 	{
 		def loop(acc : Int, n:Int):Int =
