@@ -1,6 +1,7 @@
 package week2
 
 /**
+ * Lecture 1.7
  * An improved version of factorial function, using tail recursion
  */
 object Factorial
