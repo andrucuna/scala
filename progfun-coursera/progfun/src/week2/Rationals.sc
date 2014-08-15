@@ -1,45 +1,48 @@
 package week2
 
 /**
- * Lecture 2.5
+ * Lectures 2.5 & 2.6
  * Worksheet introducing the new concept of data structures (classes and objects)
  *
  * Here we are defining the Rationals arithmetic!! :3
  */
 object Rationals
 {
-  def x = new Rational( 1, 3 )                    //> x: => week2.Rational
-  def y = new Rational( 5, 7 )                    //> y: => week2.Rational
-  def z = new Rational( 3, 2 )                    //> z: => week2.Rational
-	x.sub( y ).sub( z )                       //> res0: week2.Rational = -79/42
+  def x = new Rational( 11, 3 )                   //> x: => week2.Rational
+  def y = new Rational( 6, 4 )                    //> y: => week2.Rational
+  def z = new Rational( 2 )                       //> z: => week2.Rational
+	x.sub( y ).sub( z )                       //> res0: week2.Rational = 1/6
+	x.less( y )                               //> res1: Boolean = false
+	x.max( y )                                //> res2: week2.Rational = 11/3
+	z                                         //> res3: week2.Rational = 2/1
 }
 
 
 // Rationals arithmetic
 class Rational( x: Int, y: Int )
 {
-	def numer = x
-	def denom = y
+	require( y != 0, "denominator must be non-zero" )
+	def this( x: Int ) = this( x, 1 )
+	
+	//We simplify the rational number on its initialization
+	val numer = x / gcd( x, y )
+	val denom = y / gcd( x, y )
 	
 	
 	// Methods
-	def neg( ): Rational =
-	{
-		new Rational( (-1)*numer, denom )
-	}
+	def neg( ): Rational = new Rational( (-1)*numer, denom )
 	
-	def add( r: Rational ): Rational =
-	{
-		new Rational( r.numer * denom + numer * r.denom, r.denom * denom )
-	}
+	def add( r: Rational ): Rational = new Rational( r.numer * denom + numer * r.denom, r.denom * denom )
 	
-	def sub( r: Rational ): Rational =
-	{
-		add( r.neg )
-	}
+	def sub( r: Rational ): Rational = add( r.neg )
 	
-	override def toString( ): String =
-	{
-		numer + "/" + denom
-	}
+	def less( r: Rational ): Boolean = numer * r.denom < r.numer * denom
+	
+	def max( that: Rational ): Rational = if( this.less( that ) ) that else this
+	
+	override def toString( ): String = numer + "/" + denom
+	
+	
+	// Private methods for implementation purposes
+	private def gcd( a: Int, b: Int ): Int = if( b==0 ) a else gcd( b, a%b )
 }
