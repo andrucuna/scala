@@ -11,9 +11,9 @@ object Rationals
   def x = new Rational( 11, 3 )                   //> x: => week2.Rational
   def y = new Rational( 6, 4 )                    //> y: => week2.Rational
   def z = new Rational( 2 )                       //> z: => week2.Rational
-	x.sub( y ).sub( z )                       //> res0: week2.Rational = 1/6
-	x.less( y )                               //> res1: Boolean = false
-	x.max( y )                                //> res2: week2.Rational = 11/3
+	x - y - z                                 //> res0: week2.Rational = 1/6
+	x < y                                     //> res1: Boolean = false
+	x max y                                   //> res2: week2.Rational = 11/3
 	z                                         //> res3: week2.Rational = 2/1
 }
 
@@ -30,15 +30,15 @@ class Rational( x: Int, y: Int )
 	
 	
 	// Methods
-	def neg( ): Rational = new Rational( (-1)*numer, denom )
+	def unary_- ( ): Rational = new Rational( (-1)*numer, denom )
 	
-	def add( r: Rational ): Rational = new Rational( r.numer * denom + numer * r.denom, r.denom * denom )
+	def + ( r: Rational ): Rational = new Rational( r.numer * denom + numer * r.denom, r.denom * denom )
 	
-	def sub( r: Rational ): Rational = add( r.neg )
+	def - ( r: Rational ): Rational = this + -r
 	
-	def less( r: Rational ): Boolean = numer * r.denom < r.numer * denom
+	def < ( r: Rational ): Boolean = numer * r.denom < r.numer * denom
 	
-	def max( that: Rational ): Rational = if( this.less( that ) ) that else this
+	def max( that: Rational ): Rational = if( this < that ) that else this
 	
 	override def toString( ): String = numer + "/" + denom
 	
