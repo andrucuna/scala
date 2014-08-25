@@ -13,7 +13,7 @@ import week4.Expr._
  *
  * Example:
  * Sum(Prod(2, Var("x")), Var("y")) should print as '2 * x + y'.
- * But Prod(Sum(2, Var("x")), Var("y")) should print as '(2 * x) + y'.
+ * But Prod(Sum(2, Var("x")), Var("y")) should print as '(2 + x) * y'.
  *
  * To achieve parenthesis precedence correctly, I added trait 'Terminal' in class 'Expr' hierarchy!
  */
