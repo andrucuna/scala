@@ -1,39 +1,16 @@
 package week4
 
 /**
- * Lecture 4.5
+ * Lecture 4.6
  * 
- * A trait to test object decomposition in scala
+ * New attemp of object decomposition: this time we are using pattern matching
  */
-trait Expr 
+object Expr 
 {
-	def isNumber: Boolean
-	def isSum: Boolean
-	def numValue: Int
-	def leftOp: Expr
-	def rightOp: Expr
-  
-	def eval: Int
-}
-
-class Number( n: Int ) extends Expr
-{
-	def isNumber = true
-	def isSum = false
-	def numValue = n
-	def leftOp = throw new Error( "Number.leftOp" )
-	def rightOp = throw new Error( "Number.rightOp" )
-  
-	def eval: Int = n
-}
-
-class Sum( e1: Expr, e2: Expr ) extends Expr
-{
-	def isNumber = false
-	def isSum = true
-	def numValue = throw new Error( "Sum.numValue" )
-	def leftOp = e1
-	def rightOp = e2
-  
-	def eval: Int = e1.eval + e2.eval
+	trait Expr
+	trait Terminal extends Expr
+	case class Number( n: Int ) extends Terminal
+	case class Var( x: String ) extends Terminal
+	case class Sum( e1: Expr, e2: Expr ) extends Expr
+	case class Prod( e1: Expr, e2: Expr ) extends Expr
 }
