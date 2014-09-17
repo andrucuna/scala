@@ -192,20 +192,23 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = decodeIter( tree, tree, bits )
-  
-  def decodeIter(original: CodeTree, tree: CodeTree, bits: List[Bit]): List[Char] = bits match
-  {	  
-	  case List() => tree match
-	  {
-	  	  case Leaf( c, w ) => List( c )
-	  	  case Fork( l, r, fc, fw ) => List()
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = 
+  {
+	  def decodeIter(original: CodeTree, tree: CodeTree, bits: List[Bit]): List[Char] = bits match
+	  {	  
+		  case List() => tree match
+		  {
+		  	  case Leaf( c, w ) => List( c )
+		  	  case Fork( l, r, fc, fw ) => List()
+		  }
+		  case x :: xs => tree match
+		  {
+		  	  case Leaf( c, w ) => List( c ) ::: decodeIter( original, original, bits )
+		  	  case Fork( l, r, fc, fw ) => if( x == 0 ) decodeIter( original, l, xs ) else decodeIter( original, r, xs )
+		  }
 	  }
-	  case x :: xs => tree match
-	  {
-	  	  case Leaf( c, w ) => List( c ) ::: decodeIter( original, original, bits )
-	  	  case Fork( l, r, fc, fw ) => if( x == 0 ) decodeIter( original, l, xs ) else decodeIter( original, r, xs )
-	  }
+	  
+	  decodeIter( tree, tree, bits )
   }
 
   /**
@@ -273,12 +276,15 @@ object Huffman {
    * a valid code tree that can be represented as a code table. Using the code tables of the
    * sub-trees, think of how to build the code table for the entire tree.
    */
-  def convert(tree: CodeTree): CodeTable = convertIter( tree, tree )
-  
-  def convertIter(original: CodeTree, tree: CodeTree): CodeTable = tree match
+  def convert(tree: CodeTree): CodeTable = 
   {
-     case Leaf( c, w ) => List( ( c, encodeChar(original)(c) ) )
-     case Fork( l, r, fc, fw ) => mergeCodeTables( convertIter( original, l ), convertIter( original, r ) )
+	  def convertIter(original: CodeTree, tree: CodeTree): CodeTable = tree match
+	  {
+	     case Leaf( c, w ) => List( ( c, encodeChar(original)(c) ) )
+	     case Fork( l, r, fc, fw ) => mergeCodeTables( convertIter( original, l ), convertIter( original, r ) )
+	  }
+	  
+	  convertIter( tree, tree )
   }
 
   /**
@@ -296,13 +302,13 @@ object Huffman {
    */
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = 
   {
+	  def quickEncodeIter(table: CodeTable)(text: List[Char]): List[Bit] = text match
+	  {
+	      case List() => List()
+	      case x :: xs => codeBits(table)(x) ::: quickEncodeIter(table)(xs)
+	  }
+	  
 	  val table = convert( tree )
 	  quickEncodeIter( table )(text)
-  }
-  
-  def quickEncodeIter(table: CodeTable)(text: List[Char]): List[Bit] = text match
-  {
-      case List() => List()
-      case x :: xs => codeBits(table)(x) ::: quickEncodeIter(table)(xs)
   }
 }
